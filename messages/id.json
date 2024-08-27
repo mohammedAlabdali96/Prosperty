@@ -1,0 +1,13 @@
+{
+  "homepage": "Beranda",
+  "menu": {
+    "homepage": "Beranda",
+    "listings": "Listing",
+    "agents": "Agen",
+    "myFavorites": "Favorit Saya"
+  },
+  "bannerHome": {
+    "title": "Temukan Rumah Impian Anda Hari Ini",
+    "subtitle": "Jelajahi daftar kami yang luas dan temukan properti yang sempurna untuk Anda"
+  }
+}

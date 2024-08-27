@@ -1,0 +1,13 @@
+{
+  "homepage": "Homepage",
+  "menu": {
+    "homepage": "Homepage",
+    "listings": "Listings",
+    "agents": "Agents",
+    "myFavorites": "My Favorites"
+  },
+  "bannerHome": {
+    "title": "Find Your Dream Home Today",
+    "subtitle": "Explore our extensive listings and find the perfect property for you"
+  }
+}
