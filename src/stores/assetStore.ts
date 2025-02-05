@@ -5,9 +5,8 @@ import {
   updateAsset,
   fetchAssetTypes,
   fetchAmenities,
+  addAsset,
 } from "../api/assetApi";
-import apiClient from "../api/axios";
-
 
 export const useAssetStore = defineStore("assetStore", {
   state: () => ({
@@ -64,7 +63,7 @@ export const useAssetStore = defineStore("assetStore", {
     },
 
     async addAsset(newAsset: any) {
-      const response = await apiClient.post("/listings", newAsset);
+      const response = await addAsset(newAsset);
       this.assets.push(response.data); // ✅ Add new property to state
     },
 

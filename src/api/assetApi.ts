@@ -1,8 +1,13 @@
-import apiClient from "./axios"; 
-
+import apiClient from "./axios";
 
 export const fetchAssets = (filters: Record<string, any> = {}) => {
-  const allowedFilters = ["filter[type_id]", "filter[amenities]", "page", "sort", "sortDesc"];
+  const allowedFilters = [
+    "filter[type_id]",
+    "filter[amenities]",
+    "page",
+    "sort",
+    "sortDesc",
+  ];
 
   const params = Object.entries(filters).reduce((acc, [key, value]) => {
     if (allowedFilters.includes(key) && value) {
@@ -19,9 +24,15 @@ export const updateAsset = (uuid: string, updatedData: any) => {
 };
 
 export const fetchAssetTypes = () => {
-  return apiClient.get(`/types`).then(response => response.data);
+  return apiClient.get(`/types`).then((response) => response.data);
 };
 
 export const fetchAmenities = () => {
-  return apiClient.get(`/amenities`).then(response => response.data);
+  return apiClient.get(`/amenities`).then((response) => response.data);
+};
+
+export const addAsset = (newAsset: any) => {
+  return apiClient
+    .post("/listings", newAsset)
+    .then((response) => response.data);
 };
