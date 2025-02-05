@@ -1,26 +1,34 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, computed } from "vue";
+import { defineProps, defineEmits } from "vue";
 
-const props = defineProps<{ selectedAsset: any }>();
+const props = defineProps<{ isActionBarVisible: any }>();
 
-const emit = defineEmits(["edit", "clearSelection"]);
+const emit = defineEmits(["edit", "clearSelection", "addProperty"]);
 
-const isActionBarVisible = computed(() => props.selectedAsset !== null);
 </script>
 
 <template>
-  <div v-if="isActionBarVisible" class="pb-4 flex gap-2">
+  <div class="pb-4 flex gap-2">
     <button
-      @click="emit('edit')"
-      class="px-4 py-2 bg-blue-500 text-white rounded"
+      @click="emit('addProperty')"
+      class="px-4 py-2 bg-green-500 text-white rounded"
     >
-      Edit
+      Add Property
     </button>
-    <button
-      @click="emit('clearSelection')"
-      class="px-4 py-2 bg-gray-500 text-white rounded"
-    >
-      Cancel
-    </button>
+
+    <template v-if="isActionBarVisible">
+      <button
+        @click="emit('edit')"
+        class="px-4 py-2 bg-blue-500 text-white rounded"
+      >
+        Edit
+      </button>
+      <button
+        @click="emit('clearSelection')"
+        class="px-4 py-2 bg-gray-500 text-white rounded"
+      >
+        Cancel
+      </button>
+    </template>
   </div>
 </template>

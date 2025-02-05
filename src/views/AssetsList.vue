@@ -10,11 +10,15 @@ import AssetFilters from "../components/AssetFilters.vue";
 import Pagination from "../components/Pagination.vue";
 import ActionBar from "../components/ActionBar.vue";
 import AssetEditModal from "../components/AssetEditModal.vue";
+import AddPropertyModal from "../components/AddPropertyModal.vue";
+
 
 const assetStore = useAssetStore();
 const route = useRoute();
 const router = useRouter();
 const showEditModal = ref(false);
+const showAddModal = ref(false);
+
 
 const selectedAsset = ref<Asset | null>(null);
 
@@ -70,8 +74,11 @@ const closeEditModal = () => {
   showEditModal.value = false;
 };
 
+const clearSelection = () => {
+  selectedAsset.value = null;
+};
+
 onMounted(() => {
-  console.log("run");
   assetStore.loadAssets(route.query);
 });
 </script>
@@ -83,10 +90,10 @@ onMounted(() => {
     <AssetFilters v-model:filters="filters" />
 
     <ActionBar
-      v-if="selectedAsset"
-      :selectedAsset="selectedAsset"
+      :isActionBarVisible="selectedAsset !== null"
       @edit="showEditModal = true"
-      @clear="selectedAsset = null"
+      @clearSelection="clearSelection"
+      @addProperty="showAddModal = true"
     />
 
     <AssetTable
@@ -104,6 +111,12 @@ onMounted(() => {
       v-if="showEditModal"
       :asset="selectedAsset"
       @close="closeEditModal()"
+    />
+
+    <AddPropertyModal
+      v-if="showAddModal"
+      @close="showAddModal = false"
+      @propertyAdded="assetStore.loadAssets()"
     />
   </div>
 </template>

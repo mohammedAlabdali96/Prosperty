@@ -6,6 +6,8 @@ import {
   fetchAssetTypes,
   fetchAmenities,
 } from "../api/assetApi";
+import apiClient from "../api/axios";
+
 
 export const useAssetStore = defineStore("assetStore", {
   state: () => ({
@@ -59,6 +61,11 @@ export const useAssetStore = defineStore("assetStore", {
       } catch (err) {
         this.error = "Failed to load asset types";
       }
+    },
+
+    async addAsset(newAsset: any) {
+      const response = await apiClient.post("/listings", newAsset);
+      this.assets.push(response.data); // ✅ Add new property to state
     },
 
     async updateAssetDetails(uuid: string, updatedData: Partial<Asset>) {
