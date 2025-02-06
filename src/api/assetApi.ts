@@ -30,6 +30,9 @@ export const fetchAssetTypes = () => {
 export const fetchAmenities = () => {
   return apiClient.get(`/amenities`).then((response) => response.data);
 };
+export const fetchAssetById = (uuid:string) => {
+  return apiClient.get(`/listings/${uuid}`).then((response) => response.data);
+};
 
 export const addAsset = (newAsset: any) => {
   return apiClient

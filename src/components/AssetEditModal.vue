@@ -1,45 +1,87 @@
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits, onMounted, nextTick } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref, watch, defineProps, defineEmits, onMounted, computed } from "vue";
+import { useRoute } from "vue-router";
 import { useAssetStore } from "../stores/assetStore";
+import LoadingSpinner from "./LoadingSpinner.vue";
 import type { Asset } from "../types";
 
 const props = defineProps<{ asset: Asset }>();
 const emit = defineEmits(["close"]);
-
+const route = useRoute();
 const assetStore = useAssetStore();
+
+const originalAsset = ref<Asset>({ ...props.asset });
+const editableAsset = ref<Asset>({
+  ...props.asset,
+  type_id: props.asset.type.uuid,
+});
 
 onMounted(() => {
   assetStore.loadAssetTypes();
 });
 
-const editableAsset = ref<Asset>({ ...props.asset });
-const route = useRoute();
-
 watch(
   () => props.asset,
   (newAsset) => {
-    editableAsset.value = { ...newAsset };
-  }
+    editableAsset.value = {
+      ...newAsset,
+      type_id: newAsset.type.uuid,
+    };
+  },
+  { deep: true, immediate: true }
 );
 
+const selectedTypeId = computed({
+  get: () => editableAsset.value.type_id,
+  set: (newTypeId) => {
+    editableAsset.value.type_id = newTypeId;
+    editableAsset.value.type =
+      assetStore.assetTypes.find((t) => t.uuid === newTypeId) ||
+      editableAsset.value.type;
+  },
+});
+
+const isDataChanged = computed(() => {
+  const fieldsToCheck = [
+    "title",
+    "size",
+    "price",
+    "bathrooms",
+    "bedrooms",
+    "floor",
+    "postal_code",
+    "street",
+    "street_number",
+    "available_from",
+    "description",
+  ];
+
+  return (
+    fieldsToCheck.some(
+      (field) => originalAsset.value[field] !== editableAsset.value[field]
+    ) ||
+    JSON.stringify(originalAsset.value.amenities) !==
+      JSON.stringify(editableAsset.value.amenities)
+  );
+});
+
+const isTypeChanged = computed(() => {
+  return originalAsset.value.type.uuid !== editableAsset.value.type_id;
+});
+
+const isChanged = computed(() => isDataChanged.value || isTypeChanged.value);
+
 const saveChanges = async () => {
-  if (!editableAsset.value) return;
+  if (!editableAsset.value || assetStore.loading) return;
 
   try {
     const updatedAsset = {
       ...editableAsset.value,
-      type_id: editableAsset.value.type.uuid,
     };
-    console.log(updatedAsset);
+
 
     await assetStore.updateAssetDetails(updatedAsset.uuid, updatedAsset);
-
     await assetStore.loadAssets(route.query);
-
-    editableAsset.value.type =
-      assetStore.assetTypes.find((t) => t.uuid === updatedAsset.type_id) ||
-      editableAsset.value.type;
 
     emit("close");
   } catch (error) {
@@ -64,10 +106,7 @@ const saveChanges = async () => {
 
       <!-- Type (Dropdown) -->
       <label class="block mb-2">Type</label>
-      <select
-        v-model="editableAsset.type.uuid"
-        class="w-full p-2 border rounded mb-4"
-      >
+      <select v-model="selectedTypeId" class="w-full p-2 border rounded mb-4">
         <option
           v-for="type in assetStore.assetTypes"
           :key="type.uuid"
@@ -131,6 +170,7 @@ const saveChanges = async () => {
           />
         </div>
       </div>
+      <LoadingSpinner v-if="assetStore.loading" />
 
       <!-- Action Buttons -->
       <div class="flex justify-end gap-2">
@@ -142,9 +182,15 @@ const saveChanges = async () => {
         </button>
         <button
           @click="saveChanges"
-          class="px-4 py-2 bg-green-500 text-white rounded"
+          class="px-4 py-2 rounded flex items-center gap-2 transition-colors"
+          :class="{
+            'bg-green-500 text-white': isChanged && !assetStore.loading,
+            'bg-gray-300 text-gray-600 cursor-not-allowed':
+              !isChanged || assetStore.loading,
+          }"
+          :disabled="!isChanged"
         >
-          Save
+          {{ assetStore.loading ? "Saving..." : "Save" }}
         </button>
       </div>
     </div>

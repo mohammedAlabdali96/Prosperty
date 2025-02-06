@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
+import { useRouter } from "vue-router";
 import type { Asset } from "../types";
 
 const props = defineProps<{ assets: Asset[]; selectedAsset: Asset | null }>();
 const emit = defineEmits(["select"]);
-console.log(props);
+const router = useRouter();
+
+const goToDetails = (uuid: string) => {
+  router.push(`/assets/${uuid}`);
+};
 </script>
 
 <template>
@@ -19,6 +24,7 @@ console.log(props);
           <th class="border border-gray-300 px-4 py-2 w-56">Description</th>
           <th class="border border-gray-300 px-4 py-2">Created</th>
           <th class="border border-gray-300 px-4 py-2">Updated</th>
+          <th class="border border-gray-300 px-4 py-2">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -70,6 +76,14 @@ console.log(props);
           </td>
           <td class="border border-gray-300 px-4 py-2">
             {{ new Date(asset.updated_at).toLocaleDateString() }}
+          </td>
+          <td class="border border-gray-300 px-4 py-2 text-center">
+            <button
+              @click.stop="goToDetails(asset.uuid)"
+              class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            >
+              Details
+            </button>
           </td>
         </tr>
       </tbody>

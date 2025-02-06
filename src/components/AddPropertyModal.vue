@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, defineEmits, onMounted } from "vue";
+import { ref, defineEmits, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useAssetStore } from "../stores/assetStore";
+import LoadingSpinner from "./LoadingSpinner.vue";
 
-const emit = defineEmits(["close", "propertyAdded"]);
+const emit = defineEmits(["close"]);
 const assetStore = useAssetStore();
 const route = useRoute();
 
@@ -25,12 +26,7 @@ const newProperty = ref({
 
 const error = ref<string | null>(null);
 
-onMounted(() => {
-  assetStore.loadAssetTypes();
-  assetStore.loadAmenities();
-});
 
-// ✅ Validation logic
 const validateProperty = () => {
   if (
     !newProperty.value.title ||
@@ -69,18 +65,20 @@ const validateProperty = () => {
 };
 
 const saveProperty = async () => {
+    if (assetStore.loading) return; // ✅ Use .value to check computed properties
+
   error.value = validateProperty();
   if (error.value) return;
 
   try {
+    
     await assetStore.addAsset(newProperty.value);
-
-    emit("propertyAdded");
+    console.log(assetStore.loading)
 
     await assetStore.loadAssets(route.query);
+    console.log(assetStore.loading)
 
     emit("close");
-
   } catch (err: any) {
     console.error("Error adding property:", err);
     error.value = err.response?.data?.message || "Failed to add property.";
@@ -89,12 +87,10 @@ const saveProperty = async () => {
 </script>
 
 <template>
-  <!-- ✅ Backdrop to prevent background interaction -->
   <div
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[200]"
     @click.self="emit('close')"
   >
-    <!-- ✅ Modal Box -->
     <div class="bg-white p-6 rounded-lg shadow-xl w-[50rem] relative z-50">
       <h2 class="text-xl font-bold mb-4">Add New Property</h2>
 
@@ -243,10 +239,17 @@ const saveProperty = async () => {
         </button>
         <button
           @click="saveProperty"
-          class="px-4 py-2 bg-green-500 text-white rounded"
+          class="px-4 py-2 rounded flex items-center gap-2 transition-colors"
+          :class="{
+            'bg-green-500 text-white': !assetStore.loading,
+            'bg-gray-300 text-gray-600 cursor-not-allowed': assetStore.loading,
+          }"
+          :disabled="assetStore.loading"
+
         >
-          Save
+          {{ assetStore.loading ? "Saving..." : "Save" }}
         </button>
+        <LoadingSpinner v-if="assetStore.loading" class="w-5 h-5" />
       </div>
     </div>
   </div>

@@ -11,14 +11,13 @@ import Pagination from "../components/Pagination.vue";
 import ActionBar from "../components/ActionBar.vue";
 import AssetEditModal from "../components/AssetEditModal.vue";
 import AddPropertyModal from "../components/AddPropertyModal.vue";
-
+import LoadingSpinner from "../components/LoadingSpinner.vue";
 
 const assetStore = useAssetStore();
 const route = useRoute();
 const router = useRouter();
 const showEditModal = ref(false);
 const showAddModal = ref(false);
-
 
 const selectedAsset = ref<Asset | null>(null);
 
@@ -95,18 +94,20 @@ onMounted(() => {
       @clearSelection="clearSelection"
       @addProperty="showAddModal = true"
     />
+    <div v-if="!assetStore.loading">
+      <AssetTable
+        :assets="assetStore.assets"
+        :selectedAsset="selectedAsset"
+        @select="(asset) => (selectedAsset = asset)"
+      />
 
-    <AssetTable
-      :assets="assetStore.assets"
-      :selectedAsset="selectedAsset"
-      @select="(asset) => (selectedAsset = asset)"
-    />
-
-    <Pagination
-      v-if="assetStore.pagination"
-      :pagination="assetStore.pagination"
-      @changePage="(page) => router.push({ query: { ...route.query, page } })"
-    />
+      <Pagination
+        v-if="assetStore.pagination"
+        :pagination="assetStore.pagination"
+        @changePage="(page) => router.push({ query: { ...route.query, page } })"
+      />
+    </div>
+    <LoadingSpinner v-else />
     <AssetEditModal
       v-if="showEditModal"
       :asset="selectedAsset"
@@ -116,7 +117,6 @@ onMounted(() => {
     <AddPropertyModal
       v-if="showAddModal"
       @close="showAddModal = false"
-      @propertyAdded="assetStore.loadAssets()"
     />
   </div>
 </template>

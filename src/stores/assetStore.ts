@@ -6,6 +6,7 @@ import {
   fetchAssetTypes,
   fetchAmenities,
   addAsset,
+  fetchAssetById
 } from "../api/assetApi";
 
 export const useAssetStore = defineStore("assetStore", {
@@ -63,8 +64,17 @@ export const useAssetStore = defineStore("assetStore", {
     },
 
     async addAsset(newAsset: any) {
-      const response = await addAsset(newAsset);
-      this.assets.push(response.data); // ✅ Add new property to state
+      this.loading = true;
+
+      try {
+        console.log(this.loading);
+        await addAsset(newAsset);
+      } catch (error) {
+        this.error = "Failed to update asset";
+      } finally {
+        this.loading = false;
+        console.log("done");
+      }
     },
 
     async updateAssetDetails(uuid: string, updatedData: Partial<Asset>) {
@@ -86,5 +96,18 @@ export const useAssetStore = defineStore("assetStore", {
         this.error = "Failed to fetch amenities";
       }
     },
+    
+    async loadAssetById(uuid: string) {
+      this.loading = true;
+      try {
+        const response = await fetchAssetById(uuid);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching asset:", error);
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    }
   },
 });
