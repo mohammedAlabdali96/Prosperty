@@ -12,12 +12,18 @@ const assetStore = useAssetStore();
 const asset = ref(null);
 const showEditModal = ref(false);
 const isLoading = computed(() => assetStore.loading);
+const error = ref<string | null>(null);
 
 const fetchAssetDetails = async () => {
   try {
     asset.value = await assetStore.loadAssetById(route.params.uuid as string);
-  } catch (error) {
-    console.error("Failed to load asset:", error);
+
+    if (!asset.value) {
+      error.value = "Asset not found. The asset ID may be invalid.";
+    }
+  } catch (err) {
+    console.error("Failed to load asset:", err);
+    error.value = "An error occurred while fetching asset details.";
   }
 };
 
@@ -27,9 +33,21 @@ onMounted(fetchAssetDetails);
 <template>
   <div class="p-8 max-w-4xl mx-auto">
     <h1 class="text-4xl font-bold text-center mb-6">Asset Details</h1>
-
-    <div v-if="isLoading" class="flex justify-center mt-6">
-      <LoadingSpinner class="w-12 h-12" />
+    <div v-if="isLoading" class="flex w-full justify-center">
+      <LoadingSpinner class="w-12 h-12 w-full h-full" />
+    </div>
+    <div
+      v-else-if="error"
+      class="mt-6 p-6 border border-red-400 bg-red-100 text-red-700 rounded text-center"
+    >
+      <h2 class="text-xl font-semibold">Oops! 😟</h2>
+      <p>{{ error }}</p>
+      <button
+        @click="router.push('/')"
+        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+      >
+        Back to Assets
+      </button>
     </div>
 
     <div v-else-if="asset" class="bg-white shadow-md rounded-lg p-6">
