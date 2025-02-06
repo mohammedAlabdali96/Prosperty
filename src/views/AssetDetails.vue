@@ -32,82 +32,88 @@ onMounted(fetchAssetDetails);
 </script>
 
 <template>
-  <div class="p-8 max-w-4xl mx-auto">
-    <h1 class="text-4xl font-bold text-center mb-6">Asset Details</h1>
+  <div class="p-10 max-w-5xl mx-auto">
+    <h1 class="text-5xl font-extrabold text-center mb-8 text-gray-800">
+      Asset Details
+    </h1>
+
     <div v-if="isLoading" class="flex w-full justify-center">
       <LoadingSpinner class="w-full h-full" />
     </div>
+
     <div
       v-else-if="error"
       class="mt-6 p-6 border border-red-400 bg-red-100 text-red-700 rounded text-center"
     >
-      <h2 class="text-xl font-semibold">Oops! 😟</h2>
+      <h2 class="text-2xl font-semibold">Oops! 😟</h2>
       <p>{{ error }}</p>
       <button
         @click="router.push('/')"
-        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        class="mt-4 px-5 py-3 bg-blue-500 text-white rounded-lg font-semibold shadow-md hover:bg-blue-600 transition"
       >
         Back to Assets
       </button>
     </div>
 
-    <div v-else-if="asset" class="bg-white shadow-md rounded-lg p-6">
-      <h2 class="text-3xl font-semibold text-gray-800 mb-4">
+    <div v-else-if="asset" class="bg-white shadow-lg rounded-xl p-8">
+      <h2 class="text-4xl font-bold text-gray-900 mb-6">
         {{ asset.title }}
       </h2>
 
       <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
-            <span class="font-semibold text-gray-700">Type:</span>
-            <span class="text-gray-900">{{ asset.type.name }}</span>
+        <div class="space-y-5">
+          <div class="p-5 border rounded-lg shadow-sm bg-gray-100">
+            <span class="text-lg font-bold text-gray-700">Type:</span>
+            <span class="text-gray-900 text-lg p-3">{{ asset.type.name }}</span>
           </div>
 
-          <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
-            <span class="font-semibold text-gray-700">Size:</span>
-            <span class="text-gray-900">{{ asset.size }} sq.m</span>
+          <div class="p-5 border rounded-lg shadow-sm bg-gray-100">
+            <span class="text-lg font-bold text-gray-700">Size:</span>
+            <span class="text-gray-900 text-lg p-3">{{ asset.size }} sq.m</span>
           </div>
 
-          <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
-            <span class="font-semibold text-gray-700">Price:</span>
-            <span class="text-gray-900">€{{ asset.price }}</span>
+          <div class="p-5 border rounded-lg shadow-sm bg-gray-100">
+            <span class="text-lg font-bold text-gray-700">Price:</span>
+            <span class="text-gray-900 text-lg p-3">€{{ asset.price }}</span>
           </div>
         </div>
 
-        <div class="space-y-4">
-          <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
-            <span class="font-semibold text-gray-700">Bathrooms:</span>
-            <span class="text-gray-900">{{ asset.bathrooms }}</span>
+        <div class="space-y-5">
+          <div class="p-5 border rounded-lg shadow-sm bg-gray-100">
+            <span class="text-lg font-bold text-gray-700">Bathrooms:</span>
+            <span class="text-gray-900 text-lg p-3">{{ asset.bathrooms }}</span>
           </div>
 
-          <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
-            <span class="font-semibold text-gray-700">Bedrooms:</span>
-            <span class="text-gray-900">{{ asset.bedrooms }}</span>
+          <div class="p-5 border rounded-lg shadow-sm bg-gray-100">
+            <span class="text-lg font-bold text-gray-700">Bedrooms:</span>
+            <span class="text-gray-900 text-lg p-3">{{ asset.bedrooms }}</span>
           </div>
 
-          <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
-            <span class="font-semibold text-gray-700">Floor:</span>
-            <span class="text-gray-900">{{ asset.floor }}</span>
+          <div class="p-5 border rounded-lg shadow-sm bg-gray-100">
+            <span class="text-lg font-bold text-gray-700">Floor:</span>
+            <span class="text-gray-900 text-lg p-3">{{ asset.floor }}</span>
           </div>
         </div>
       </div>
 
-      <div class="p-4 border rounded-lg shadow-sm bg-gray-50 mt-6">
-        <span class="font-semibold text-gray-700">Address:</span>
-        <span class="text-gray-900">
+      <div class="p-5 border rounded-lg shadow-sm bg-gray-100 mt-8">
+        <span class="text-lg font-bold text-gray-700">Address:</span>
+        <span class="text-gray-900 text-lg p-3">
           {{ asset.street }} {{ asset.street_number }}, {{ asset.postal_code }}
         </span>
       </div>
 
-      <div class="p-4 border rounded-lg shadow-sm bg-gray-50 mt-6">
-        <span class="font-semibold text-gray-700">Description:</span>
-        <p class="text-gray-900">{{ asset.description }}</p>
+      <div class="p-5 border rounded-lg shadow-sm bg-gray-100 mt-8">
+        <span class="text-lg font-bold text-gray-700">Description:</span>
+        <p class="text-gray-900 text-lg mt-2 leading-relaxed p-3">
+          {{ asset.description }}
+        </p>
       </div>
 
-      <div class="flex justify-center mt-6">
+      <div class="flex justify-center mt-8">
         <button
           @click="showEditModal = true"
-          class="px-6 py-3 bg-blue-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
+          class="px-6 py-4 bg-blue-500 text-white text-xl font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition transform hover:scale-105"
         >
           Edit Asset
         </button>
