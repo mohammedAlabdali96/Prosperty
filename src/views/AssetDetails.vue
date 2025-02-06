@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAssetStore } from "../stores/assetStore";
+import type { Asset } from "../types";
 import AssetEditModal from "../components/AssetEditModal.vue";
 import LoadingSpinner from "../components/LoadingSpinner.vue";
 
@@ -9,7 +10,7 @@ const route = useRoute();
 const router = useRouter();
 const assetStore = useAssetStore();
 
-const asset = ref(null);
+const asset = ref<Asset | null>(null);
 const showEditModal = ref(false);
 const isLoading = computed(() => assetStore.loading);
 const error = ref<string | null>(null);
@@ -34,7 +35,7 @@ onMounted(fetchAssetDetails);
   <div class="p-8 max-w-4xl mx-auto">
     <h1 class="text-4xl font-bold text-center mb-6">Asset Details</h1>
     <div v-if="isLoading" class="flex w-full justify-center">
-      <LoadingSpinner class="w-12 h-12 w-full h-full" />
+      <LoadingSpinner class="w-full h-full" />
     </div>
     <div
       v-else-if="error"
@@ -114,7 +115,7 @@ onMounted(fetchAssetDetails);
     </div>
 
     <AssetEditModal
-      v-if="showEditModal"
+      v-if="showEditModal && asset"
       :asset="asset"
       @close="
         showEditModal = false;

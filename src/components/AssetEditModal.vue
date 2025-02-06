@@ -56,12 +56,10 @@ const isDataChanged = computed(() => {
     "description",
   ];
 
-  return (
-    fieldsToCheck.some(
-      (field) => originalAsset.value[field] !== editableAsset.value[field]
-    ) ||
-    JSON.stringify(originalAsset.value.amenities) !==
-      JSON.stringify(editableAsset.value.amenities)
+  return fieldsToCheck.some(
+    (field) =>
+      originalAsset.value[field as keyof Asset] !==
+      editableAsset.value[field as keyof Asset]
   );
 });
 
@@ -79,7 +77,6 @@ const saveChanges = async () => {
       ...editableAsset.value,
     };
 
-
     await assetStore.updateAssetDetails(updatedAsset.uuid, updatedAsset);
     await assetStore.loadAssets(route.query);
 
@@ -92,7 +89,7 @@ const saveChanges = async () => {
 
 <template>
   <div
-    class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center"
+    class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-[200]"
   >
     <div class="bg-white p-6 rounded-lg shadow-lg w-[40rem]">
       <h2 class="text-xl font-bold mb-4">Edit Asset</h2>

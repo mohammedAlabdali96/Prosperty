@@ -109,7 +109,7 @@ onMounted(() => {
     </div>
     <LoadingSpinner v-else />
     <AssetEditModal
-      v-if="showEditModal"
+      v-if="showEditModal && selectedAsset"
       :asset="selectedAsset"
       @close="closeEditModal()"
     />
