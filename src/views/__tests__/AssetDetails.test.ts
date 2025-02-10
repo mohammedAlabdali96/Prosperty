@@ -39,7 +39,6 @@ describe("AssetDetails.vue", () => {
       .mockImplementation(() => Promise.resolve(mockAsset));
   });
 
-  // ✅ Test Case 1: Renders Asset Details Correctly
   it("renders asset details when API call is successful", async () => {
     const wrapper = shallowMount(AssetDetails);
 
