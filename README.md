@@ -62,11 +62,6 @@ yarn install
 
 
 
-sh
-Copy
-Edit
-
-
 3️⃣ **Run the app locally:**
 
 
