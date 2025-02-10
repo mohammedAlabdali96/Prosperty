@@ -48,7 +48,7 @@ _Easily Add property in a responsive modal._
 1️⃣ **Clone the repository:**
 
 ```sh
-git clone [https://github.com/yourusername/prosperty-app.git](https://github.com/mohammedAlabdali96/Prosperty.git)
+git clone https://github.com/mohammedAlabdali96/Prosperty.git
 cd Prosperty
 ```
 
