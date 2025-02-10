@@ -23,7 +23,7 @@ Want to **browse, filter, and manage** properties like a boss? This app has got 
 _The clean and intuitive property list view._
 
 ![Property Details](src/assets/screenshots/property-details.png)  
-_Filter properties easily based on type, size, and amenities._
+_Property details view._
 
 ![Edit Modal](src/assets/screenshots/edite.png)  
 _Easily edit property details in a responsive modal._
