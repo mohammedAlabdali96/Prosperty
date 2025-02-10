@@ -27,25 +27,23 @@ const newProperty = ref({
 const error = ref<string | null>(null);
 
 const validateProperty = () => {
+  if (!newProperty.value.title) return "Title is required.";
+  if (!newProperty.value.type_id) return "Type is required.";
+  if (!newProperty.value.size || newProperty.value.size <= 0)
+    return "Size must be greater than 0.";
+
+  if (!newProperty.value.price || isNaN(Number(newProperty.value.price))) {
+    return "Price is required and must be a valid number.";
+  }
+
   if (
-    !newProperty.value.title ||
-    !newProperty.value.type_id ||
-    !newProperty.value.size
+    !newProperty.value.bathrooms ||
+    newProperty.value.bathrooms <= 0 ||
+    newProperty.value.bathrooms > 10
   ) {
-    return "Title, Type, and Size are required.";
+    return "Bathrooms must be an integer between 0 and 10.";
   }
-  if (!newProperty.value.price) {
-    return "Price is required.";
-  }
-  if (newProperty.value.bathrooms < 0 || newProperty.value.bathrooms > 10) {
-    return "Bathrooms must be between 0 and 10.";
-  }
-  if (newProperty.value.bedrooms < 0) {
-    return "Bedrooms must be at least 0.";
-  }
-  if (!newProperty.value.amenities.length) {
-    return "At least one amenity must be selected.";
-  }
+
   if (
     newProperty.value.description.length < 50 ||
     newProperty.value.description.length > 500
@@ -53,11 +51,32 @@ const validateProperty = () => {
     return "Description must be between 50 and 500 characters.";
   }
 
+  if (!newProperty.value.street) return "Street field is required.";
+  if (!newProperty.value.street_number)
+    return "Street number field is required.";
+  if (!newProperty.value.postal_code) return "Postal code field is required.";
+
+  if (!newProperty.value.available_from)
+    return "Available from field is required.";
+
+  // Ensure the date format is YYYY-MM-DD
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(newProperty.value.available_from)) {
+    return "Available From date must be in YYYY-MM-DD format.";
+  }
+
   const today = new Date();
   today.setDate(today.getDate() + 1);
   const selectedDate = new Date(newProperty.value.available_from);
   if (selectedDate < today) {
     return "Available From date must be at least one day from today.";
+  }
+
+  if (
+    !newProperty.value.amenities ||
+    newProperty.value.amenities.length === 0
+  ) {
+    return "At least one amenity must be selected.";
   }
 
   return null;
@@ -80,14 +99,21 @@ const saveProperty = async () => {
     error.value = err.response?.data?.message || "Failed to add property.";
   }
 };
+
+defineExpose({
+  newProperty,
+});
+
 </script>
 
 <template>
   <div
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[200]"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[200] p-4"
     @click.self="emit('close')"
   >
-    <div class="bg-white p-6 rounded-lg shadow-xl w-[50rem] relative z-50">
+    <div
+      class="bg-white p-6 rounded-lg shadow-xl w-full max-w-[45rem] md:w-3/4 lg:w-1/2 xl:w-[40rem] h-auto max-h-[80vh] flex flex-col overflow-y-auto"
+    >
       <h2 class="text-xl font-bold mb-4">Add New Property</h2>
 
       <div v-if="error" class="text-red-500 mb-4">{{ error }}</div>
@@ -206,7 +232,9 @@ const saveProperty = async () => {
       <label class="block mt-4 mb-2">Description</label>
       <textarea
         v-model="newProperty.description"
-        class="w-full p-2 border rounded"
+        class="w-full p-2 border rounded h-32 min-h-[120px]"
+        rows="4"
+        placeholder="Enter a detailed description..."
       ></textarea>
 
       <!-- Amenities -->

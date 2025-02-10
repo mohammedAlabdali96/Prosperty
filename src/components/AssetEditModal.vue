@@ -90,7 +90,7 @@ const saveChanges = async () => {
 
 <template>
   <div
-    class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-[200]"
+    class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-[200] overflow-x-scroll"
   >
     <div class="bg-white p-6 rounded-lg shadow-lg w-[40rem]">
       <h2 class="text-xl font-bold mb-4">Edit Asset</h2>
