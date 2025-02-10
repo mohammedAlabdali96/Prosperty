@@ -42,7 +42,7 @@
   export interface AssetType {
     uuid: string;
     name: string;
-    value: number;
+    value?: number;
   }
 
   export interface Filters {

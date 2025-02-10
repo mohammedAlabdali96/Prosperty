@@ -25,8 +25,6 @@ export const useAssetStore = defineStore("assetStore", {
       this.error = null;
 
       try {
-        console.log("Fetching assets with filters:", filters);
-
         const response = await fetchAssets(filters);
 
         this.assets = response.data.data;
@@ -67,13 +65,11 @@ export const useAssetStore = defineStore("assetStore", {
       this.loading = true;
 
       try {
-        console.log(this.loading);
         await addAsset(newAsset);
       } catch (error) {
         this.error = "Failed to update asset";
       } finally {
         this.loading = false;
-        console.log("done");
       }
     },
 

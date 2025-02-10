@@ -3,8 +3,8 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAssetStore } from "../stores/assetStore";
 import type { Asset } from "../types";
-import AssetEditModal from "../components/AssetEditModal.vue";
-import LoadingSpinner from "../components/LoadingSpinner.vue";
+import AssetEditModal from "/src/components/AssetEditModal.vue";
+import LoadingSpinner from "/src/components/LoadingSpinner.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -29,6 +29,8 @@ const fetchAssetDetails = async () => {
 };
 
 onMounted(fetchAssetDetails);
+defineExpose({ fetchAssetDetails, showEditModal });
+
 </script>
 
 <template>
@@ -87,11 +89,6 @@ onMounted(fetchAssetDetails);
           <div class="p-5 border rounded-lg shadow-sm bg-gray-100">
             <span class="text-lg font-bold text-gray-700">Bedrooms:</span>
             <span class="text-gray-900 text-lg p-3">{{ asset.bedrooms }}</span>
-          </div>
-
-          <div class="p-5 border rounded-lg shadow-sm bg-gray-100">
-            <span class="text-lg font-bold text-gray-700">Floor:</span>
-            <span class="text-gray-900 text-lg p-3">{{ asset.floor }}</span>
           </div>
         </div>
       </div>

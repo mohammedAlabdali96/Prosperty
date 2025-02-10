@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
+import type { PropType } from "vue";
 import { useRouter } from "vue-router";
 import type { Asset } from "../types";
 
-const props = defineProps<{ assets: Asset[]; selectedAsset: Asset | null }>();
+const props = defineProps({
+  assets: Array as PropType<Asset[]>,
+  selectedAsset: Object as PropType<Asset | null>,
+});
 const emit = defineEmits(["select"]);
 const router = useRouter();
 

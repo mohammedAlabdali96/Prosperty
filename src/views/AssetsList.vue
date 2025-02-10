@@ -5,13 +5,13 @@ import { useAssetStore } from "../stores/assetStore";
 import { useRoute, useRouter } from "vue-router";
 import type { Asset, Filters } from "../types";
 
-import AssetTable from "../components/AssetTable.vue";
-import AssetFilters from "../components/AssetFilters.vue";
-import Pagination from "../components/Pagination.vue";
-import ActionBar from "../components/ActionBar.vue";
-import AssetEditModal from "../components/AssetEditModal.vue";
-import AddPropertyModal from "../components/AddPropertyModal.vue";
-import LoadingSpinner from "../components/LoadingSpinner.vue";
+import AssetTable from "/src/components/AssetTable.vue";
+import AssetFilters from "/src/components/AssetFilters.vue";
+import Pagination from "/src/components/Pagination.vue";
+import ActionBar from "/src/components/ActionBar.vue";
+import AssetEditModal from "/src/components/AssetEditModal.vue";
+import AddPropertyModal from "/src/components/AddPropertyModal.vue";
+import LoadingSpinner from "/src/components/LoadingSpinner.vue";
 
 const assetStore = useAssetStore();
 const route = useRoute();
@@ -35,8 +35,6 @@ const filters: any = ref({
 watch(
   filters,
   debounce((newFilters: Filters) => {
-    console.log("Filters Changed:", newFilters);
-
     const newQuery: any = {
       "filter[type_id]": newFilters.types.length
         ? newFilters.types.join(",")
@@ -62,7 +60,6 @@ watch(
 watch(
   () => route.query,
   debounce((newQuery: any) => {
-    console.log("Route Query Changed:", newQuery);
     assetStore.loadAssets(newQuery);
   }, 300),
   { deep: true }
@@ -75,6 +72,14 @@ const closeEditModal = () => {
 
 const clearSelection = () => {
   selectedAsset.value = null;
+};
+
+const changePage = (page: number) => {
+  router.push({ query: { ...route.query, page } });
+};
+
+const selectAsset = (asset: Asset) => {
+  selectedAsset.value = asset;
 };
 
 onMounted(() => {
@@ -98,13 +103,13 @@ onMounted(() => {
       <AssetTable
         :assets="assetStore.assets"
         :selectedAsset="selectedAsset"
-        @select="(asset) => (selectedAsset = asset)"
+        @select="selectAsset"
       />
 
       <Pagination
         v-if="assetStore.pagination"
         :pagination="assetStore.pagination"
-        @changePage="(page) => router.push({ query: { ...route.query, page } })"
+        @changePage="changePage"
       />
     </div>
     <LoadingSpinner v-else />
@@ -114,9 +119,6 @@ onMounted(() => {
       @close="closeEditModal()"
     />
 
-    <AddPropertyModal
-      v-if="showAddModal"
-      @close="showAddModal = false"
-    />
+    <AddPropertyModal v-if="showAddModal" @close="showAddModal = false" />
   </div>
 </template>

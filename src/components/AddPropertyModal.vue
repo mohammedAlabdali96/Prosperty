@@ -26,7 +26,6 @@ const newProperty = ref({
 
 const error = ref<string | null>(null);
 
-
 const validateProperty = () => {
   if (
     !newProperty.value.title ||
@@ -65,18 +64,15 @@ const validateProperty = () => {
 };
 
 const saveProperty = async () => {
-    if (assetStore.loading) return; // ✅ Use .value to check computed properties
+  if (assetStore.loading) return;
 
   error.value = validateProperty();
   if (error.value) return;
 
   try {
-    
     await assetStore.addAsset(newProperty.value);
-    console.log(assetStore.loading)
 
     await assetStore.loadAssets(route.query);
-    console.log(assetStore.loading)
 
     emit("close");
   } catch (err: any) {
@@ -245,7 +241,6 @@ const saveProperty = async () => {
             'bg-gray-300 text-gray-600 cursor-not-allowed': assetStore.loading,
           }"
           :disabled="assetStore.loading"
-
         >
           {{ assetStore.loading ? "Saving..." : "Save" }}
         </button>

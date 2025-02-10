@@ -5,6 +5,7 @@ import { useAssetStore } from "../stores/assetStore";
 import LoadingSpinner from "./LoadingSpinner.vue";
 import type { Asset } from "../types";
 
+
 const props = defineProps<{ asset: Asset }>();
 const emit = defineEmits(["close"]);
 const route = useRoute();
